@@ -1,5 +1,8 @@
 package com.example.lateComerApp.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,11 +72,49 @@ public class EmployeeController {
 		  
 		  Employee emp = employeeService.findByEmail(request.getEmail()).orElse(null);
 		  
-		  if(emp == null) {
-			  Employee newEmployee = new Employee();
+		  SimpleDateFormat parser = new SimpleDateFormat("HH:mm");
+		  Date eigth = null;
+			try {
+				eigth = parser.parse("8:00");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  
+		  if(emp != null) {
+			  emp.setArrivalTime(request.getArrivalTime());
+			  
+			  Double owe = 0.0;
+			  if(request.getArrivalTime().after(eigth)) {
+				   owe = Double.valueOf(request.getArrivalTime().getMinutes()) * 0.2;
+			  }
+			  
+			  Double total = owe + emp.getBill();
+			  
+			  emp.setBill(total);
+			  
+		  }else {
+			  
+			  emp = new Employee();
+			  emp.setAddress(request.getAddress());
+			  emp.setEmployeeName(request.getEmployeeName());
+			  emp.setEmail(request.getEmail());
+			  emp.setArrivalTime(request.getArrivalTime());
+			  
+			  Double owe = 0.0;
+			  if(request.getArrivalTime().after(eigth)) {
+				   owe = Double.valueOf(request.getArrivalTime().getMinutes()) * 0.2;
+			  }
+			  
+			  Double total = owe + emp.getBill();
+			  
+			  emp.setBill(total);
 			  
 		  }
-		//employeeService.save(employee);
+		  
+		  
+		 employeeService.save(emp);
+		  
 		return new GenericResponse("Employee added successfully");
 	  }
 	  

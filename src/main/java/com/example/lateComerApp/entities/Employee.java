@@ -34,7 +34,7 @@ public class Employee implements Serializable{
 	@Column(columnDefinition = "Text")
 	private String address;
 	private Double bill;
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIME)
 	private Date arrivalTime;
 	@Column(updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
